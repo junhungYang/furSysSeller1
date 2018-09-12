@@ -49,7 +49,7 @@ export default {
         login() {
             let account = this.id
             let passWord = this.ps
-            axios.post('/user/loginByEmployee',{
+            axios.post('/api/user/loginByEmployee',{
                 account,
                 passWord
             }).then((res) => {

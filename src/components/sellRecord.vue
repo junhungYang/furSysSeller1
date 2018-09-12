@@ -58,7 +58,7 @@ export default {
             })
         },
         dataInit(dateStr) {
-          axios.post('/order/queryOrderListByEmployee',{
+          axios.post('/api/order/queryOrderListByEmployee',{
           pageNumber:1,
           pageSize:10,
           start: dateStr,

@@ -8,15 +8,15 @@
               <ul class="user-data">
                   <li>
                       <span>会员名称</span>
-                      <span>{{vipInfo.name}}</span>
+                      <span>{{name}}</span>
                   </li>
                   <li>
                       <span>会员编号</span>
-                      <span>{{vipInfo.code}}</span>
+                      <span>{{code}}</span>
                   </li>
                   <li>
                       <span>所属门店</span>
-                      <span>{{vipInfo.shop}}</span>
+                      <span>{{shop}}</span>
                   </li>
                   <li>
                       <span>购买系列</span>
@@ -50,12 +50,10 @@ export default {
   data() {
     return {
       myShop: 'null',
-      vipInfo: {
-        name: "唐先生",
-        code: "C00001",
-        shop: "ABCD",
-        goods: ['听风细雨', '听风细雨1', '听风细雨2', '听风细雨3']
-      }
+      name:"",
+      code:"",
+      shop:"",
+      goods:[]
     }
   },
   methods: {
@@ -64,7 +62,14 @@ export default {
     },
     getCustomerData() {
       //扫码获取memberCode后，发送请求获取用户信息
-      
+      axios.post("/api/user/getUserInfoByMemberCode",{
+        memberCode:'2018091140642'
+      }).then((res) => {
+        let customerInfo = res.data.data
+        this.name = customerInfo.nickname
+        this.shop = "需确认"
+        this.code = customerInfo.member_code
+      })
     }
   },
   created() {

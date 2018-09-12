@@ -61,7 +61,10 @@ export default {
     ...mapState(['goodsErrorState','goodsSuccessState'])
   },
   methods: {
-    ...mapMutations(['goodsSuccessaManage','goodsErrorManage']),
+    ...mapMutations([
+    'goodsSuccessaManage',
+    'goodsErrorManage',
+    'customerInfoInit']),
     goToRecord() {
         router.push('/sellRecord')
     },
@@ -71,6 +74,11 @@ export default {
         memberCode:'2018091140642'
       }).then((res) => {
         let customerInfo = res.data.data
+        this.customerInfoInit({
+          customerName:customerInfo.nickname,
+          shopName:"需确认",
+          customerCode:customerInfo.member_code
+        })
         this.name = customerInfo.nickname
         this.shop = "需确认"
         this.code = customerInfo.member_code

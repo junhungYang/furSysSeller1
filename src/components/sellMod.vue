@@ -22,19 +22,19 @@
                       <span>购买系列</span>
                       <div class="select">
                         <div class="select-title" @click="selectShowState = !selectShowState">
-                          <span>hell</span>
+                          <span>{{goodsList[0]}}</span>
                           <img class="icon" src="/static/img/下拉@2x.png">
                         </div>
-                        <div class="slider-wrap" v-show="selectShowState">
+                        <div class="slider-wrap" v-show="selectShowState" ref="scrollWrap">
                           <ul>
-                            <li v-for="item,index in 8" :key="index">hello Worsdfsdld</li>
+                            <li v-for="item,index in goodsList"  :key="index">{{goodsList[index]}}</li>
                           </ul>
                         </div>
                       </div>
                   </li>
               </ul>
               <div class="sell-control">
-                  <div class="cancel" @click="customerInfoInit">取消</div>
+                  <div class="cancel" @click="customerInfoInit(false)">取消</div>
                   <div class="line"></div>
                   <div class="confirm" @click="userConfirm">核销</div>
               </div>
@@ -52,17 +52,25 @@
     </div>
 </template>
 <script>
+import Vue from "vue"
 import axios from 'axios'
 import goodsError from '../plugin/goodsError'
 import goodsSuccess from '../plugin/goodsSuccess'
 import router from '../router/index'
 import { mapState, mapMutations } from 'vuex'
+import BScroll from 'better-scroll'
 export default {
   data() {
     return {
       myShop: 'null',
       selectShowState:false
     }
+  },
+  created() {
+    this.myShop = this.$route.params.shopName
+  },
+  mounted() {
+    this.goodsListScrollInit()
   },
   computed: {
     ...mapState([
@@ -71,7 +79,10 @@ export default {
       'customerName',
       'shopName',
       'customerCode',
-      'goodsList'])
+      'goodsList']),
+      firstGoods() {
+        return this.goodsList[0] ? this.goodsList[0] : ''
+      }
   },
   methods: {
     ...mapMutations([
@@ -81,6 +92,14 @@ export default {
     goToRecord() {
       router.push('/sellRecord')
     },
+    //初始化下拉菜单拖动功能
+    goodsListScrollInit() {
+      this.scrollList = new BScroll(this.$refs.scrollWrap,{
+                click:true,
+                probeType:3
+            })
+    },
+    //扫码时
     getCustomerData() {
       //扫码获取memberCode后，发送请求获取用户信息
       axios.post("/api/user/getUserInfoByMemberCode", {
@@ -90,10 +109,12 @@ export default {
         this.customerInfoInit({
           customerName: customerInfo.nickname,
           shopName: "需确认",
-          customerCode: customerInfo.member_code
+          customerCode: customerInfo.member_code,
+          goodsList:['待定','待定','待定','待定'] //待定
         })
       })
     },
+    //正式分销前判断用户身份
     userConfirm() {
       if (this.customerName) {
         axios.post("/api/order/isAbnormal", {
@@ -107,6 +128,7 @@ export default {
         })
       }
     },
+    //按分销按钮
     sellConfirm() {
       axios.post("/api/order/addOrder", {
         memberCode: this.customerCode,
@@ -118,8 +140,12 @@ export default {
       })
     },
   },
-  created() {
-    this.myShop = this.$route.params.shopName
+  watch: {
+    selectShowState() {
+      Vue.nextTick(() => {
+        this.scrollList.refresh()
+      })
+    }
   },
   components: {
     'v-goodsError': goodsError,
@@ -203,7 +229,10 @@ export default {
                 }
               }
               .select-title {
-              display: inline-block;
+                position: absolute;
+                right: 0;
+                top: 3px;
+              display: block;
               border:1px solid #e9e9e9;
               width:100px;
               height:22px;

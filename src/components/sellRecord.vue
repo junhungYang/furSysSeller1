@@ -60,13 +60,12 @@ export default {
         dataInit(dateStr) {
           axios.post('/api/order/queryOrderListByEmployee',{
           pageNumber:1,
-          pageSize:10,
+          pageSize:15,
           start: dateStr,
           end:dateStr
         }).then((res) => {
             if(res.data.code === 0) {
               this.historyList = res.data.data.list
-              console.log(this.historyList)
             }
         })
         },

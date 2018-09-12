@@ -63,6 +63,7 @@ export default {
         router.push('/sellRecord')
     },
     getCustomerData() {
+      //扫码获取memberCode后，发送请求获取用户信息
       
     }
   },

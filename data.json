@@ -236,5 +236,24 @@
         ]
     },
     "isAbnormal": 0,
-    "addOrder": null
+    "addOrder": null,
+    "getUserInfoByMemberCode": {
+        "city": "广州市",
+        "create_time": "2018-09-11 10:28:10",
+        "dealer_id": 1,
+        "detail_address": "测试测试hi和",
+        "gender": 1,
+        "head_img_url": null,
+        "id": 1,
+        "level_id": 1,
+        "member_code": "2018091140642",
+        "mobile": "15626160835",
+        "nickname": "菠萝油猴子",
+        "open_id": "xzkjchkuahsdkjh",
+        "province": "广东省",
+        "qr_code_url": "http://127.0.0.1:18080",
+        "reg_dealer_id": 1,
+        "region": "海珠区",
+        "remark": ""
+    }
 }

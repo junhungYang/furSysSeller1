@@ -2,13 +2,16 @@
     <div class="goods-success">
         <div class="wrap">
             <div class="content">核销成功</div>
-            <div class="btn">确认</div>
+            <div class="btn" @click.stop="goodsSuccessaManage(false)">确认</div>
         </div>
     </div>
 </template>
 <script>
+import {mapMutations} from 'vuex'
 export default {
-    
+    methods: {
+        ...mapMutations(['goodsSuccessaManage'])
+    }
 }
 </script>
 <style lang="less" scoped>

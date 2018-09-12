@@ -26,7 +26,7 @@
               <div class="sell-control">
                   <div class="cancel">取消</div>
                   <div class="line"></div>
-                  <div class="confirm">核销</div>
+                  <div class="confirm" @click="sellConfirm">核销</div>
               </div>
           </div>
           <div class="control">
@@ -36,8 +36,8 @@
         </div>
       </div>
       <div class="sellRes">
-        <!-- <v-goodsError></v-goodsError> -->
-        <!-- <v-goodsSuccess></v-goodsSuccess> -->
+        <v-goodsError v-show="goodsErrorState"></v-goodsError>
+        <v-goodsSuccess v-show="goodsSuccessState"></v-goodsSuccess>
       </div>
     </div>
 </template>
@@ -46,6 +46,7 @@ import axios from 'axios'
 import goodsError from '../plugin/goodsError'
 import goodsSuccess from '../plugin/goodsSuccess'
 import router from '../router/index'
+import {mapState,mapMutations} from 'vuex'
 export default {
   data() {
     return {
@@ -56,7 +57,11 @@ export default {
       goods:[]
     }
   },
+  computed: {
+    ...mapState(['goodsErrorState','goodsSuccessState'])
+  },
   methods: {
+    ...mapMutations(['goodsSuccessaManage','goodsErrorManage']),
     goToRecord() {
         router.push('/sellRecord')
     },
@@ -70,10 +75,21 @@ export default {
         this.shop = "需确认"
         this.code = customerInfo.member_code
       })
+    },
+    sellConfirm() {
+      axios.post("/api/order/addOrder",{
+        memberCode:this.code,
+        seriesId:['1','2','3'] //需确认
+      }).then((res) => {
+        if(res.data.code === 0) {
+          this.goodsSuccessaManage(true)
+        }else if(res.data.code === 1) {
+          this.goodsErrorManage(true)
+        }
+      })
     }
   },
   created() {
-    console.log(this.$route.params)
     this.myShop = this.$route.params.shopName
   },
   components: {
@@ -115,6 +131,7 @@ export default {
         }
         .user-data {
           margin: 0 15px;
+          border-bottom:1px solid #e9e9e9;
           li {
             height: 31px;
             font-size: 13px;

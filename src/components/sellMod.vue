@@ -20,7 +20,17 @@
                   </li>
                   <li>
                       <span>购买系列</span>
-                      <span>听风细雨</span>
+                      <div class="select">
+                        <div class="select-title" @click="selectShowState = !selectShowState">
+                          <span>hell</span>
+                          <img class="icon" src="/static/img/下拉@2x.png">
+                        </div>
+                        <div class="slider-wrap" v-show="selectShowState">
+                          <ul>
+                            <li v-for="item,index in 8" :key="index">hello Worsdfsdld</li>
+                          </ul>
+                        </div>
+                      </div>
                   </li>
               </ul>
               <div class="sell-control">
@@ -50,7 +60,8 @@ import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
     return {
-      myShop: 'null'
+      myShop: 'null',
+      selectShowState:false
     }
   },
   computed: {
@@ -159,13 +170,63 @@ export default {
             span:nth-of-type(1) {
               width: 55px;
             }
-            span:nth-of-type(2) {
+            span:nth-of-type(2),.select {
               flex: 1;
               text-align: right;
               white-space: nowrap;
-              overflow: hidden;
               text-overflow: ellipsis;
             }
+            span:nth-of-type(2) {
+              overflow: hidden;
+            }
+            .select {
+              position: relative;
+              .slider-wrap {
+                background:#fff;
+                border-radius: 10px;
+                box-shadow: 0 0 8px rgba(0,0,0,0.4);
+                position: absolute;
+                width:180px;
+                max-height:200px;
+                overflow: hidden;
+                top:32px;
+                right:0;
+                padding: 0 13px;
+                ul{
+                  li {
+                    text-align: right;
+                    border-bottom:1px solid #e9e9e9;
+                  }
+                  li:last-of-type {
+                    border:0;
+                  }
+                }
+              }
+              .select-title {
+              display: inline-block;
+              border:1px solid #e9e9e9;
+              width:100px;
+              height:22px;
+              line-height: 22px;
+              span {
+                display: inline-block;
+                width: 72px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+              }
+              img {
+                vertical-align: top;
+                margin-top:10px;
+                margin-left:6px;
+                margin-right:6px;
+                width: 8px;
+              }
+            }
+            }
+          }
+          li:last-of-type {
+                    margin-bottom:9px;
           }
         }
         .sell-control {

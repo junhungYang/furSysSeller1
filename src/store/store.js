@@ -10,7 +10,7 @@ export const store = new Vuex.Store({
            customerName:'',
            shopName:'',
            customerCode:'',
-           goodsList:[]
+           goodsList:['待定','待定','待定','待定']
          },
          mutations: {
            loginErrorManage(state) {

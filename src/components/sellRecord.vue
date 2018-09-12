@@ -37,6 +37,7 @@
 <script>
 import BScroll from 'better-scroll'
 import axios from 'axios'
+import waterfull from '../js/waterfullApi'
 export default {
     data() {
       return {
@@ -56,6 +57,8 @@ export default {
                 click:true,
                 probeType:3
             })
+            console.log(waterfull.scrollGetData)
+              waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', '/api/order/queryOrderListByEmployee')
         },
         dataInit(dateStr) {
           axios.post('/api/order/queryOrderListByEmployee',{

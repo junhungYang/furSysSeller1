@@ -2,7 +2,7 @@
     <div class="goods-success">
         <div class="wrap">
             <div class="content">核销成功</div>
-            <div class="btn" @click.stop="goodsSuccessaManage(false)">确认</div>
+            <div class="btn" @click.stop="closeMod">确认</div>
         </div>
     </div>
 </template>
@@ -10,7 +10,11 @@
 import {mapMutations} from 'vuex'
 export default {
     methods: {
-        ...mapMutations(['goodsSuccessaManage'])
+        ...mapMutations(['goodsSuccessaManage','customerInfoInit']),
+        closeMod() {
+            this.goodsSuccessaManage(false)
+            this.customerInfoInit()
+        }
     }
 }
 </script>

@@ -8,15 +8,15 @@
               <ul class="user-data">
                   <li>
                       <span>会员名称</span>
-                      <span>{{name}}</span>
+                      <span>{{customerName}}</span>
                   </li>
                   <li>
                       <span>会员编号</span>
-                      <span>{{code}}</span>
+                      <span>{{customerCode}}</span>
                   </li>
                   <li>
                       <span>所属门店</span>
-                      <span>{{shop}}</span>
+                      <span>{{shopName}}</span>
                   </li>
                   <li>
                       <span>购买系列</span>
@@ -24,7 +24,7 @@
                   </li>
               </ul>
               <div class="sell-control">
-                  <div class="cancel">取消</div>
+                  <div class="cancel" @click="customerInfoInit">取消</div>
                   <div class="line"></div>
                   <div class="confirm" @click="userConfirm">核销</div>
               </div>
@@ -46,64 +46,62 @@ import axios from 'axios'
 import goodsError from '../plugin/goodsError'
 import goodsSuccess from '../plugin/goodsSuccess'
 import router from '../router/index'
-import {mapState,mapMutations} from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
     return {
-      myShop: 'null',
-      name:"",
-      code:"",
-      shop:"",
-      goods:[]
+      myShop: 'null'
     }
   },
   computed: {
-    ...mapState(['goodsErrorState','goodsSuccessState'])
+    ...mapState([
+      'goodsErrorState',
+      'goodsSuccessState',
+      'customerName',
+      'shopName',
+      'customerCode',
+      'goodsList'])
   },
   methods: {
     ...mapMutations([
-    'goodsSuccessaManage',
-    'goodsErrorManage',
-    'customerInfoInit']),
+      'goodsSuccessaManage',
+      'goodsErrorManage',
+      'customerInfoInit']),
     goToRecord() {
-        router.push('/sellRecord')
+      router.push('/sellRecord')
     },
     getCustomerData() {
       //扫码获取memberCode后，发送请求获取用户信息
-      axios.post("/api/user/getUserInfoByMemberCode",{
-        memberCode:'2018091140642'
+      axios.post("/api/user/getUserInfoByMemberCode", {
+        memberCode: '2018091140642'
       }).then((res) => {
         let customerInfo = res.data.data
         this.customerInfoInit({
-          customerName:customerInfo.nickname,
-          shopName:"需确认",
-          customerCode:customerInfo.member_code
+          customerName: customerInfo.nickname,
+          shopName: "需确认",
+          customerCode: customerInfo.member_code
         })
-        this.name = customerInfo.nickname
-        this.shop = "需确认"
-        this.code = customerInfo.member_code
       })
     },
     userConfirm() {
-      axios.post("/api/order/isAbnormal",{
-        memberCode:this.code
-      }).then((res) => {
-        if(res.data.code === 0) {
-          this.sellConfirm()
-        }else if(res.data.code === 1) {
-          this.goodsErrorManage(true)
-        }
-      })
+      if (this.customerName) {
+        axios.post("/api/order/isAbnormal", {
+          memberCode: this.code
+        }).then((res) => {
+          if (res.data.code === 0) {
+            this.sellConfirm()
+          } else if (res.data.code === 1) {
+            this.goodsErrorManage(true)
+          }
+        })
+      }
     },
     sellConfirm() {
-      axios.post("/api/order/addOrder",{
-        memberCode:this.code,
-        seriesId:[1,2,3,4] //需确认
+      axios.post("/api/order/addOrder", {
+        memberCode: this.customerCode,
+        seriesId: [1, 2, 3, 4] //需确认
       }).then((res) => {
-        if(res.data.code === 0) {
-          this.name = ''
-          this.shop = '' //需确认
-          this.code = ''
+        if (res.data.code === 0) {
           this.goodsSuccessaManage(true)
         }
       })
@@ -151,12 +149,13 @@ export default {
         }
         .user-data {
           margin: 0 15px;
-          border-bottom:1px solid #e9e9e9;
+          border-bottom: 1px solid #e9e9e9;
           li {
             height: 31px;
             font-size: 13px;
             display: flex;
             line-height: 31px;
+            color: #353535;
             span:nth-of-type(1) {
               width: 55px;
             }

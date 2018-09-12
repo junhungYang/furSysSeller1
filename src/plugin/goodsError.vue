@@ -6,18 +6,37 @@
                 该用户并非本店会员，核销该订单可能 被视为跨店异常行为，是否确认核销？
             </div>
             <div class="control">
-                <div class="cancel" @click.stop="goodsErrorManage(false)">取消</div>
+                <div class="cancel" @click.stop="closeMod">取消</div>
                 <div class="line"></div>
-                <div class="confirm">确认</div>
+                <div class="confirm" @click.stop="sellConfirm">确认</div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import {mapMutations} from 'vuex'
+import {mapState,mapMutations} from 'vuex'
+import axios from 'axios'
 export default {
+  computed: {
+    ...mapState(['customerCode'])
+  },
   methods: {
-    ...mapMutations(['goodsErrorManage'])
+    ...mapMutations(['goodsErrorManage','customerInfoInit']),
+    closeMod() {
+      this.goodsErrorManage(false)
+      this.customerInfoInit()
+    },
+    sellConfirm() {
+      axios.post("/api/order/addOrder", {
+        memberCode: this.customerCode,
+        seriesId: [1, 2, 3, 4] //需确认
+      }).then((res) => {
+        if (res.data.code === 0) {
+          this.goodsErrorManage(false)
+          this.customerInfoInit()
+        }
+      })
+    }
   }
 }
 </script>

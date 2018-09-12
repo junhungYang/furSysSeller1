@@ -12,7 +12,7 @@ Mock.mock("/api/order/queryOrderListByEmployee", {
 });
 Mock.mock("/api/order/isAbnormal", {
   msg: "",
-  code: 0,
+  code: 1,
     data: data.isAbnormal
 });
 Mock.mock("/api/order/addOrder", {

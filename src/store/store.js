@@ -6,7 +6,11 @@ export const store = new Vuex.Store({
          state: {
            loginErrorState: false,
            goodsSuccessState: false,
-           goodsErrorState: false
+           goodsErrorState: false,
+           customerName:'',
+           shopName:'',
+           customerCode:'',
+           goodsList:[]
          },
          mutations: {
            loginErrorManage(state) {
@@ -21,6 +25,19 @@ export const store = new Vuex.Store({
              payload
                  ? (state.goodsErrorState = true)
                  : (state.goodsErrorState = false);
+           },
+           customerInfoInit(state,payload) {
+               if(payload) {
+                   state.customerName = payload.customerName
+                   state.shopName = payload.shopName
+                   state.customerCode = payload.customerCode
+                   //state.goodsList = ['需确认','需确认','需确认']
+               }else {
+                   state.customerName = ''
+                   state.shopName = ''
+                   state.customerCode = ''
+                   state.goodsList = []
+               }
            }
          }
        });

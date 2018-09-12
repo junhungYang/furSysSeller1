@@ -26,7 +26,7 @@
               <div class="sell-control">
                   <div class="cancel">取消</div>
                   <div class="line"></div>
-                  <div class="confirm" @click="sellConfirm">核销</div>
+                  <div class="confirm" @click="userConfirm">核销</div>
               </div>
           </div>
           <div class="control">
@@ -76,18 +76,30 @@ export default {
         this.code = customerInfo.member_code
       })
     },
-    sellConfirm() {
-      axios.post("/api/order/addOrder",{
-        memberCode:this.code,
-        seriesId:['1','2','3'] //需确认
+    userConfirm() {
+      axios.post("/api/order/isAbnormal",{
+        memberCode:this.code
       }).then((res) => {
         if(res.data.code === 0) {
-          this.goodsSuccessaManage(true)
+          this.sellConfirm()
         }else if(res.data.code === 1) {
           this.goodsErrorManage(true)
         }
       })
-    }
+    },
+    sellConfirm() {
+      axios.post("/api/order/addOrder",{
+        memberCode:this.code,
+        seriesId:[1,2,3,4] //需确认
+      }).then((res) => {
+        if(res.data.code === 0) {
+          this.name = ''
+          this.shop = '' //需确认
+          this.code = ''
+          this.goodsSuccessaManage(true)
+        }
+      })
+    },
   },
   created() {
     this.myShop = this.$route.params.shopName

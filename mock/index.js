@@ -17,7 +17,7 @@ Mock.mock("/api/order/isAbnormal", {
 });
 Mock.mock("/api/order/addOrder", {
   msg: "",
-  code: 1,
+  code: 0,
   data: data.addOrder
 });
 Mock.mock("/api/user/getUserInfoByMemberCode", {

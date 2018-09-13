@@ -8,12 +8,8 @@
 <script>
 // import wx from 'weixin-js-sdk'
 import axios from 'axios'
-import test from '@/components/datePicker'
 export default {
   created() {
-  },
-  components: {
-    test
   }
 }
 </script>

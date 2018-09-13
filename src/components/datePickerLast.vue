@@ -1,6 +1,6 @@
 <template>
     <div class="date-picker">
-            <el-date-picker
+    <el-date-picker
       v-model="value1"
       type="date"
       placeholder="选择日期">
@@ -8,23 +8,24 @@
     </div>
 </template>
 <script>
+import {mapState,mapMutations} from 'vuex'
 export default {
     data() {
         return {
             value1:'',
         }
     },
+    methods: {
+        ...mapMutations(['changeDate'])
+    },
     watch: {
         value1() {
-            console.log(this.value1)
+            this.changeDate({index:1,date:this.value1})
         }
     }
 }
 </script>
 <style lang="less">
-    .el-date-editor.el-input, .el-date-editor.el-input__inner {
-    
-}
 .el-input--prefix .el-input__inner {
     height: 100%;
     width: 83px;
@@ -42,7 +43,3 @@ export default {
     transform: translateX(-50%);
 }
 </style>
-
-
-
-

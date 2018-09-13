@@ -3,10 +3,10 @@
         <div class="date-wrap">
             <span>设置筛选日期 :</span>
             <!-- <input type="text"> -->
-            <div><datePicker></datePicker></div>
+            <div><datePickerFirst></datePickerFirst></div>
             <span>至</span>
-            <div><datePicker></datePicker></div>
-            <div class="button">确定</div>
+            <div><datePickerLast></datePickerLast></div>
+            <div class="button" @click="firstDate && lastDate && getHistory(firstDate,lastDate)">确定</div>
         </div>
         <div class="scroll-wrap" ref="scrollWrap">
             <ul>
@@ -40,7 +40,9 @@
 import BScroll from 'better-scroll'
 import axios from 'axios'
 import waterfull from '../dddd/waterfullApi1'
-import datePicker from './datePicker'
+import datePickerFirst from './datePickerFirst'
+import datePickerLast from './datePickerLast'
+import {mapState} from 'vuex'
 export default {
     data() {
       return {
@@ -49,12 +51,15 @@ export default {
         loadingFlag:false,
       }
     },
+    computed: {
+      ...mapState(['firstDate','lastDate'])
+    },
     mounted() {
         this.scrollInit()
     },
     created() {
         this.dateStr = this.dateInit()
-        this.dataInit()
+        this.getHistory(this.dateStr,this.dateStr)
     },
     methods: {
         scrollInit() {
@@ -64,13 +69,14 @@ export default {
             })
             waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', '/api/order/queryOrderListByEmployee')
         },
-        dataInit(dateStr) {
+        getHistory(start,end) {
+          console.log(134654)
           this.waterfullInit()
           axios.post('/api/order/queryOrderListByEmployee',{
           pageNumber:1,
           pageSize:15,
-          start: this.dateStr,
-          end:this.dateStr
+          start,
+          end
         }).then((res) => {
             if(res.data.code === 0) {
               this.historyList = res.data.data.list
@@ -89,7 +95,8 @@ export default {
         }
     },
     components: {
-      datePicker
+      datePickerFirst,
+      datePickerLast
     }
 }
 </script>

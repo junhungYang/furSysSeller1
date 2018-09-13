@@ -2,9 +2,10 @@
     <div class="sell-record">
         <div class="date-wrap">
             <span>设置筛选日期 :</span>
-            <input type="text">
+            <!-- <input type="text"> -->
+            <div><datePicker></datePicker></div>
             <span>至</span>
-            <input type="text">
+            <div><datePicker></datePicker></div>
             <div class="button">确定</div>
         </div>
         <div class="scroll-wrap" ref="scrollWrap">
@@ -39,6 +40,7 @@
 import BScroll from 'better-scroll'
 import axios from 'axios'
 import waterfull from '../dddd/waterfullApi1'
+import datePicker from './datePicker'
 export default {
     data() {
       return {
@@ -85,6 +87,9 @@ export default {
           let date = dateObj.getDate()
           return `${year}-${month}-${date}`
         }
+    },
+    components: {
+      datePicker
     }
 }
 </script>
@@ -104,8 +109,9 @@ export default {
     z-index: 1;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.116);
     color: #353535;
-    input {
-      margin: 5px;
+    div {
+      // margin:0 5px;
+      display: inline-block;
       width: 83px;
     }
     @media screen and (max-width: 330px) {

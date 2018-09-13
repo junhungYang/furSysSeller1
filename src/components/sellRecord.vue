@@ -37,19 +37,20 @@
 <script>
 import BScroll from 'better-scroll'
 import axios from 'axios'
-import waterfull from '../js/waterfullApi'
+import waterfull from '../dddd/waterfullApi1'
 export default {
     data() {
       return {
-        historyList:[]
+        historyList:[],
+        dateStr:''
       }
     },
     mounted() {
         this.scrollInit()
     },
     created() {
-        let dateStr = this.dateInit()
-        this.dataInit(dateStr)
+        this.dateStr = this.dateInit()
+        this.dataInit()
     },
     methods: {
         scrollInit() {
@@ -57,20 +58,23 @@ export default {
                 click:true,
                 probeType:3
             })
-            console.log(waterfull.scrollGetData)
-              waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', '/api/order/queryOrderListByEmployee')
+            waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', '/api/order/queryOrderListByEmployee')
         },
         dataInit(dateStr) {
+          this.waterfullInit()
           axios.post('/api/order/queryOrderListByEmployee',{
           pageNumber:1,
           pageSize:15,
-          start: dateStr,
-          end:dateStr
+          start: this.dateStr,
+          end:this.dateStr
         }).then((res) => {
             if(res.data.code === 0) {
               this.historyList = res.data.data.list
             }
         })
+        },
+        waterfullInit() {
+          waterfull.propInit(this)
         },
         dateInit() {
           let dateObj = new Date()

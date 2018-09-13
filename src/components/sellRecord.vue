@@ -27,6 +27,7 @@
                         </div>
                     </div>
                 </li>
+                <div class="loading" v-show="loadingFlag">{{loadingState}}</div>
             </ul>
         </div>
         <div class="scanCode">
@@ -42,7 +43,8 @@ export default {
     data() {
       return {
         historyList:[],
-        dateStr:''
+        dateStr:'',
+        loadingFlag:false,
       }
     },
     mounted() {
@@ -184,6 +186,13 @@ export default {
             margin-top: 13px;
           }
         }
+      }
+      .loading {
+        height: 40px;
+        text-align: center;
+        line-height:40px;
+        color:#ccc;
+        font-size: 12px;
       }
     }
   }

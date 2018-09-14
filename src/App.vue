@@ -6,11 +6,9 @@
 </template>
 
 <script>
-// import wx from 'weixin-js-sdk'
 import axios from 'axios'
 export default {
-  created() {
-  }
+  
 }
 </script>
 

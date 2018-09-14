@@ -39,7 +39,7 @@
 <script>
 import BScroll from 'better-scroll'
 import axios from 'axios'
-import waterfull from '../dddd/waterfullApi1'
+import waterfull from '../api/waterfullApi1'
 import datePickerFirst from './datePickerFirst'
 import datePickerLast from './datePickerLast'
 import {mapState} from 'vuex'

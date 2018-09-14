@@ -59,6 +59,7 @@ import goodsSuccess from '../plugin/goodsSuccess'
 import router from '../router/index'
 import { mapState, mapMutations } from 'vuex'
 import BScroll from 'better-scroll'
+import wechat from '../api/wechat'
 export default {
   data() {
     return {
@@ -101,7 +102,9 @@ export default {
     },
     //扫码时
     getCustomerData() {
-      //扫码获取memberCode后，发送请求获取用户信息
+      wechat.scanQrCode(data =>{
+        alert(JSON.stringify(data))
+        //扫码获取memberCode后，发送请求获取用户信息
       axios.post("/api/user/getUserInfoByMemberCode", {
         memberCode: '2018091140642'
       }).then((res) => {
@@ -112,6 +115,7 @@ export default {
           customerCode: customerInfo.member_code,
           goodsList:['待定','待定','待定','待定'] //待定
         })
+      })
       })
     },
     //正式分销前判断用户身份

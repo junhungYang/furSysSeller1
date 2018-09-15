@@ -41,21 +41,12 @@ export const store = new Vuex.Store({
         : (state.goodsErrorState = false);
     },
     customerInfoInit(state, payload) {
+      console.log(payload)
       if (payload) {
         state.customerName = payload.customerName;
         state.shopName = payload.shopName;
         state.customerCode = payload.customerCode;
-        state.goodsList = [
-          "需确认",
-          "需确认",
-          "需确认",
-          "需确认",
-          "需确认",
-          "需确认",
-          "需确认",
-          "需确认",
-          "需确认"
-        ];
+        state.goodsList = payload.goodsList;
       } else {
         state.customerName = "";
         state.shopName = "";

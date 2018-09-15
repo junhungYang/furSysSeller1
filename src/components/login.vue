@@ -49,11 +49,9 @@ export default {
         login() {
             let account = this.id
             let passWord = this.ps
-            axios.post('/api/user/loginByEmployee',{
-                account,
-                passWord
-            }).then((res) => {
+            axios.get(`${domain.testUrl}user/loginByEmployee?account=${this.id}&passWord=${this.ps}`).then((res) => {
                 //有数据的话进行跳转，没有的话弹出弹框
+                console.log(res)
                 if(res.data.code === 0) {
                     router.push({
                         name: 'sellMod',
@@ -61,8 +59,8 @@ export default {
                         //     shopName
                         // }
                     })
-                }else if(res.data.code === 1) {
-                    this.loginErrorManage()
+                }else if(res.data.code === -1) {
+                    alert(res.data.msg)
                 }
             })
         }

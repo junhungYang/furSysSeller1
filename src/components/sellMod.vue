@@ -22,12 +22,12 @@
                       <span>购买系列</span>
                       <div class="select">
                         <div class="select-title" @click="selectShowState = !selectShowState">
-                          <span>{{goodsList[0]}}</span>
+                          <span>{{sellingGood ? sellingGood.name : '请选择'}}</span>
                           <img class="icon" src="/static/img/下拉@2x.png">
                         </div>
                         <div class="slider-wrap" v-show="selectShowState" ref="scrollWrap">
                           <ul>
-                            <li v-for="item,index in goodsList"  :key="index">{{goodsList[index]}}</li>
+                            <li v-for="item,index in goodsList"  :key="index" @click="sellingState(item)">{{goodsList[index].name}}</li>
                           </ul>
                         </div>
                       </div>
@@ -36,7 +36,7 @@
               <div class="sell-control">
                   <div class="cancel" @click="customerInfoInit(false)">取消</div>
                   <div class="line"></div>
-                  <div class="confirm" @click="userConfirm">核销</div>
+                  <div class="confirm" @click="sellConfirm">核销</div>
               </div>
           </div>
           <div class="control">
@@ -64,7 +64,9 @@ export default {
   data() {
     return {
       myShop: 'null',
-      selectShowState:false
+      selectShowState:false,
+      sellingGood:'',
+      memberCode:''
     }
   },
   created() {
@@ -90,6 +92,10 @@ export default {
       'goodsSuccessaManage',
       'goodsErrorManage',
       'customerInfoInit']),
+    sellingState(item) {
+      this.sellingGood = item;
+      this.selectShowState = false
+    },
     goToRecord() {
       router.push('/sellRecord')
     },
@@ -102,21 +108,35 @@ export default {
     },
     //扫码时
     getCustomerData() {
-      wechat.scanQrCode(data =>{
-        alert(JSON.stringify(data))
-        //扫码获取memberCode后，发送请求获取用户信息
-      axios.post("/api/user/getUserInfoByMemberCode", {
-        memberCode: '2018091140642'
-      }).then((res) => {
+      wechat.scanQrCode({
+        needResult:1,
+        success:data =>{
+        let memberCode = JSON.stringify(data)
+        this.memberCode = memberCode
+      axios.get(`${domain.testUrl}user/getUserInfoByMemberCode?memberCode=${memberCode}`).then((res) => {
+        console.log(res)
         let customerInfo = res.data.data
         this.customerInfoInit({
           customerName: customerInfo.nickname,
-          shopName: "需确认",
+          shopName: customerInfo.reg_dealer_name,
           customerCode: customerInfo.member_code,
-          goodsList:['待定','待定','待定','待定'] //待定
+          goodsList:[{
+            value:1,
+            name:'上善'
+          },{
+            value:2,
+            name:'厚德'
+          },{
+            value:3,
+            name:'新厚德'
+          },{
+            value:4,
+            name:'听风观雨'
+          },]
         })
       })
-      })
+      }
+      })  
     },
     //正式分销前判断用户身份
     userConfirm() {
@@ -134,13 +154,12 @@ export default {
     },
     //按分销按钮
     sellConfirm() {
-      axios.post("/api/order/addOrder", {
-        memberCode: this.customerCode,
-        seriesId: [1, 2, 3, 4] //需确认
-      }).then((res) => {
-        if (res.data.code === 0) {
+      axios.get(`/api/order/addOrder?memberCode=${this.memberCode}&seriesId=${this.sellingGood.value}`).then((res) => {
+        console.log(res)
+        // if (res.data.code === 0) {
           this.goodsSuccessaManage(true)
-        }
+          this.sellingGood = '请选择'
+        // }
       })
     },
   },

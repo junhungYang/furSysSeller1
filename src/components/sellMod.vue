@@ -111,7 +111,8 @@ export default {
       wechat.scanQrCode({
         needResult:1,
         success:data =>{
-        let memberCode = JSON.stringify(data)
+        let obj = JSON.stringify(data)
+        let memberCode = obj.resultStr
         this.memberCode = memberCode
       axios.get(`${domain.testUrl}user/getUserInfoByMemberCode?memberCode=${memberCode}`).then((res) => {
         if(res.data.code === 0) {

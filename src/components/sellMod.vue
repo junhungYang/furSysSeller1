@@ -114,26 +114,29 @@ export default {
         let memberCode = JSON.stringify(data)
         this.memberCode = memberCode
       axios.get(`${domain.testUrl}user/getUserInfoByMemberCode?memberCode=${memberCode}`).then((res) => {
-        console.log(res)
-        let customerInfo = res.data.data
-        this.customerInfoInit({
-          customerName: customerInfo.nickname,
-          shopName: customerInfo.reg_dealer_name,
-          customerCode: customerInfo.member_code,
-          goodsList:[{
-            value:1,
-            name:'上善'
-          },{
-            value:2,
-            name:'厚德'
-          },{
-            value:3,
-            name:'新厚德'
-          },{
-            value:4,
-            name:'听风观雨'
-          },]
+        if(res.data.code === 0) {
+          let customerInfo = res.data.data
+          this.customerInfoInit({
+            customerName: customerInfo.nickname,
+            shopName: customerInfo.reg_dealer_name,
+            customerCode: customerInfo.member_code,
+            goodsList:[{
+              value:1,
+              name:'上善'
+            },{
+              value:2,
+              name:'厚德'
+            },{
+              value:3,
+              name:'新厚德'
+            },{
+              value:4,
+              name:'听风观雨'
+            },]
         })
+        }else if(res.data.code === -1) {
+          alert(res.data.msg)
+        }
       })
       }
       })  

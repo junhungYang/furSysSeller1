@@ -108,38 +108,34 @@ export default {
     },
     //扫码时
     getCustomerData() {
-      wechat.scanQrCode({
-        needResult:1,
-        success:data =>{
-        let obj = JSON.stringify(data)
-        let memberCode = obj.resultStr
+      wechat.scanQrCode((data) => {
+        let memberCode = data
         this.memberCode = memberCode
-      axios.get(`${domain.testUrl}user/getUserInfoByMemberCode?memberCode=${memberCode}`).then((res) => {
-        if(res.data.code === 0) {
-          let customerInfo = res.data.data
-          this.customerInfoInit({
-            customerName: customerInfo.nickname,
-            shopName: customerInfo.reg_dealer_name,
-            customerCode: customerInfo.member_code,
-            goodsList:[{
-              value:1,
-              name:'上善'
-            },{
-              value:2,
-              name:'厚德'
-            },{
-              value:3,
-              name:'新厚德'
-            },{
-              value:4,
-              name:'听风观雨'
-            },]
+        axios.get(`${domain.testUrl}user/getUserInfoByMemberCode?memberCode=${memberCode}`).then((res) => {
+          if(res.data.code === 0) {
+            let customerInfo = res.data.data
+            this.customerInfoInit({
+              customerName: customerInfo.nickname,
+              shopName: customerInfo.reg_dealer_name,
+              customerCode: customerInfo.member_code,
+              goodsList:[{
+                value:1,
+                name:'上善'
+              },{
+                value:2,
+                name:'厚德'
+              },{
+                value:3,
+                name:'新厚德'
+              },{
+                value:4,
+                name:'听风观雨'
+              },]
+          })
+          }else if(res.data.code === -1) {
+            alert(res.data.msg)
+          }
         })
-        }else if(res.data.code === -1) {
-          alert(res.data.msg)
-        }
-      })
-      }
       })  
     },
     //正式分销前判断用户身份
@@ -158,7 +154,8 @@ export default {
     },
     //按分销按钮
     sellConfirm() {
-      axios.get(`/api/order/addOrder?memberCode=${this.memberCode}&seriesId=${this.sellingGood.value}`).then((res) => {
+      console.log(this.sellingGood)
+      axios.get(`${domain.testUrl}order/addOrder?memberCode=${this.memberCode}&seriesId=${this.sellingGood.value}`).then((res) => {
         console.log(res)
         // if (res.data.code === 0) {
           this.goodsSuccessaManage(true)

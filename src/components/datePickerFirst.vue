@@ -26,9 +26,6 @@ export default {
 }
 </script>
 <style lang="less">
-    .el-date-editor.el-input, .el-date-editor.el-input__inner {
-    
-}
 .el-input--prefix .el-input__inner {
     height: 100%;
     width: 83px;

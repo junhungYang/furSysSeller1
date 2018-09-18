@@ -27,7 +27,8 @@ headers:{
   }
 }).then((res) => {
    wechat.configParam = res.data.data
-   wechat.configParam.debug = false
+   console.log(res.data.data)
+   wechat.configParam.debug = true
    wechat.setWxConfig({
      jsApiList: ['scanQRCode', 'translateVoice', 'checkJsApi']
    })

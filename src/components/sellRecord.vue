@@ -80,6 +80,10 @@ export default {
         }).then((res) => {
             if(res.data.code === 0) {
               this.historyList = res.data.data.list
+            }else if(res.data.code === -1) {
+              alert(res.data.msg)
+            }else if(res.data.code === 10101) {
+              location.assign('http://qinqing.ydcycloud.com/employee/index.html')
             }
         })
         },

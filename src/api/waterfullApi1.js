@@ -38,12 +38,15 @@ const waterfullApi = {
                     mod.loadingState = "loading...";
                     mod.loadingFlag = false;
                     mod.scrollBottomFlag = true;
-                }else if(res.data.code === 1) {
+                }else if(res.data.code === -1) {
                     mod.loadingState = "没有数据了...";
                     setTimeout(() => {
                         mod.loadingFlag = false;
                         mod.scrollBottomFlag = true
                     }, 1500);
+                    alert(res.data.msg)
+                }else if(res.data.code === 10101) {
+                    location.assign("http://qinqing.ydcycloud.com/employee/index.html");
                 }
               })
         }, 1500);

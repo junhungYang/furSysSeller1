@@ -54,13 +54,12 @@ export default {
                 console.log(res)
                 if(res.data.code === 0) {
                     router.push({
-                        name: 'sellMod',
-                        // params: {
-                        //     shopName
-                        // }
+                        name: 'sellMod'
                     })
                 }else if(res.data.code === -1) {
                     alert(res.data.msg)
+                }else if(res.data.code === 10101) {
+                    location.assign('http://qinqing.ydcycloud.com/employee/index.html')
                 }
             })
         }

@@ -21,7 +21,7 @@
                   <li>
                       <span>购买系列</span>
                       <div class="select">
-                        <div class="select-title" @click="selectShowState = !selectShowState">
+                        <div class="select-title" @click="selectShowStateMange">
                           <span>{{sellingGood ? sellingGood.name : '请选择'}}</span>
                           <img class="icon" src="/static/img/下拉@2x.png">
                         </div>
@@ -71,6 +71,8 @@ export default {
   },
   created() {
     this.myShop = this.$route.params.shopName
+    this.getEmployeeInfo()
+    this.getSeriesListByDealer()
   },
   mounted() {
     this.goodsListScrollInit()
@@ -91,7 +93,33 @@ export default {
     ...mapMutations([
       'goodsSuccessaManage',
       'goodsErrorManage',
-      'customerInfoInit']),
+      'customerInfoInit',
+      'goodsListInit']),
+      selectShowStateMange() {
+        this.selectShowState = !this.selectShowState
+      },
+    getSeriesListByDealer() {
+      axios.get(`${domain.testUrl}dealer/getSeriesListByDealer`).then(res => {
+        if(res.data.code === 0) {
+          this.goodsListInit(res.data.data)
+        }else if(res.data.code === -1) {
+          alert(res.data.msg)
+        }else if(res.data.code === 10101) {
+          location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+        }
+      })
+    },
+    getEmployeeInfo() {
+      axios.get(`${domain.testUrl}user/getEmployeeInfo`).then(res => {
+        if(res.data.code === 0) {
+          //没有code
+        }else if(res.data.code === -1) {
+          alert(res.data.msg)
+        }else if(res.data.code === 10101) {
+          location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+        }
+      })
+    },
     sellingState(item) {
       this.sellingGood = item;
       this.selectShowState = false
@@ -118,49 +146,41 @@ export default {
               customerName: customerInfo.nickname,
               shopName: customerInfo.reg_dealer_name,
               customerCode: customerInfo.member_code,
-              goodsList:[{
-                value:1,
-                name:'上善'
-              },{
-                value:2,
-                name:'厚德'
-              },{
-                value:3,
-                name:'新厚德'
-              },{
-                value:4,
-                name:'听风观雨'
-              },]
           })
           }else if(res.data.code === -1) {
             alert(res.data.msg)
+          }else if(res.data.code === 10101) {
+            location.assign('http://qinqing.ydcycloud.com/employee/index.html')
           }
         })
       })  
     },
     //正式分销前判断用户身份
-    userConfirm() {
-      if (this.customerName) {
-        axios.post("/api/order/isAbnormal", {
-          memberCode: this.code
-        }).then((res) => {
-          if (res.data.code === 0) {
-            this.sellConfirm()
-          } else if (res.data.code === 1) {
-            this.goodsErrorManage(true)
-          }
-        })
-      }
-    },
+    // userConfirm() {
+    //   if (this.customerName) {
+    //     axios.post("/api/order/isAbnormal", {
+    //       memberCode: this.code
+    //     }).then((res) => {
+    //       if (res.data.code === 0) {
+    //         this.sellConfirm()
+    //       } else if (res.data.code === 1) {
+    //         this.goodsErrorManage(true)
+    //       }
+    //     })
+    //   }
+    // },
     //按分销按钮
     sellConfirm() {
-      console.log(this.sellingGood)
-      axios.get(`${domain.testUrl}order/addOrder?memberCode=${this.memberCode}&seriesId=${this.sellingGood.value}`).then((res) => {
+      axios.get(`${domain.testUrl}order/addOrder?memberCode=${this.memberCode}&seriesId=${this.sellingGood.id}`).then((res) => {
         console.log(res)
-        // if (res.data.code === 0) {
+        if (res.data.code === 0) {
           this.goodsSuccessaManage(true)
           this.sellingGood = '请选择'
-        // }
+        }else if(res.data.code === -1) {
+          alert(res.data.msg)
+        }else if(res.data.code === 10101) {
+          location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+        }
       })
     },
   },
@@ -246,9 +266,6 @@ export default {
                   li {
                     text-align: right;
                     border-bottom:1px solid #e9e9e9;
-                  }
-                  li:last-of-type {
-                    border:0;
                   }
                 }
               }

@@ -202,7 +202,7 @@ export default {
 <style lang="less" scoped>
 .sellMod {
   height: 100%;
-  background: url("/static/img/背景@2x.png");
+  background: url("/static/img/background.jpg");
   background-size: cover;
   .main {
     display: flex;

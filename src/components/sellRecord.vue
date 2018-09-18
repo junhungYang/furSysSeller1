@@ -70,27 +70,14 @@ export default {
             })
             waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', domain.testUrl)
         },
-        getHistory(start,end) {
+        getHistory(start,end,fromBtn) {
           this.waterfullInit()
-          // axios.post(`${domain.testUrl}order/queryOrderListByEmployee`,{
-          //   pageNumber:1,
-          //   pageSize:10,
-          //   start,
-          //   end
-          // },{
-          //   headers:{
-          //     'Content-Type': 'application/x-www-form-urlencoded'
-          //   }
-          // }).then((res) => {
-          //     if(res.data.code === 0) {
-          //       this.historyList = res.data.data.list
-          //     }else if(res.data.code === -1) {
-          //       alert(res.data.msg)
-          //     }else if(res.data.code === 10101) {
-          //       // location.assign('http://qinqing.ydcycloud.com/employee/index.html')
-          //     }
-          // })
-          let str = `pageNumber=1&pageSize=10&start=${start}&end=${end}`
+          let str
+          if(!fromBtn) {
+             str = `pageNumber=1&pageSize=10`
+          }else {
+            str = `pageNumber=1&pageSize=10&start=${start}&end=${end}`
+          }
           axios.get(`${domain.testUrl}order/queryOrderListByEmployee?${str}`).then(res => {
             if(res.data.code === 0) {
                 this.historyList = res.data.data.list
@@ -122,13 +109,8 @@ export default {
             return `${year}-${monthStr}-${dateStr}`
         },
         datePickerBtn() {
-          this.getHistory(this.firstDate,this.lastDate)
+          this.getHistory(this.firstDate,this.lastDate,'fromBtn')
         }
-    },
-    watch: {
-      historyList() {
-        console.log('hello')
-      }
     },
     components: {
       datePickerFirst,

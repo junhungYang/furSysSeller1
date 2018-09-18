@@ -24,13 +24,19 @@ const waterfullApi = {
         this.scrollRefresh(mod, scrollList)
         //为了模拟loading效果，暂时使用延时，真正上线时应取消
         setTimeout(() => {
+            let start = mod.$store.state.firstDate;
+            let end = mod.$store.state.lastDate;
             axios
-              .post(url, {
+                .post(`${url}order/queryOrderListByEmployee`, {
                 pageNumber: this.waterfullIndex,
                 pageSize: 15,
-                start: mod.dateStr,
-                end: mod.dateStr
-              })
+                start,
+                end
+                }, {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
               .then(res => {
                 if (res.data.code === 0) {
                     mod.historyList = mod.historyList.concat(res.data.data.list);

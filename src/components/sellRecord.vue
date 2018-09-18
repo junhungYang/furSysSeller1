@@ -6,7 +6,8 @@
             <div><datePickerFirst></datePickerFirst></div>
             <span>至</span>
             <div><datePickerLast></datePickerLast></div>
-            <div class="button" @click="firstDate && lastDate && getHistory(firstDate,lastDate)">确定</div>
+            <div class="button" @click="firstDate && lastDate && datePickerBtn()">确定</div>
+            getHistory(firstDate,lastDate)
         </div>
         <div class="scroll-wrap" ref="scrollWrap">
             <ul>
@@ -42,7 +43,7 @@ import axios from 'axios'
 import waterfull from '../api/waterfullApi1'
 import datePickerFirst from './datePickerFirst'
 import datePickerLast from './datePickerLast'
-import {mapState} from 'vuex'
+import {mapState,mapMutations} from 'vuex'
 export default {
     data() {
       return {
@@ -62,41 +63,65 @@ export default {
         this.getHistory(this.dateStr,this.dateStr)
     },
     methods: {
+        ...mapMutations(['changeDate']),
         scrollInit() {
             this.scrollList = new BScroll(this.$refs.scrollWrap,{
                 click:true,
                 probeType:3
             })
-            waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', '/api/order/queryOrderListByEmployee')
+            waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', domain.testUrl)
         },
         getHistory(start,end) {
-          console.log(134654)
           this.waterfullInit()
-          axios.post('/api/order/queryOrderListByEmployee',{
-          pageNumber:1,
-          pageSize:15,
-          start,
-          end
-        }).then((res) => {
-            if(res.data.code === 0) {
-              this.historyList = res.data.data.list
-            }else if(res.data.code === -1) {
-              alert(res.data.msg)
-            }else if(res.data.code === 10101) {
-              location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+          axios.post(`${domain.testUrl}order/queryOrderListByEmployee`,{
+            pageNumber:1,
+            pageSize:10,
+            start,
+            end
+          },{
+            headers:{
+              'Content-Type': 'application/x-www-form-urlencoded'
             }
-        })
+          }).then((res) => {
+            console.log(res)
+              if(res.data.code === 0) {
+                this.historyList = res.data.data.list
+              }else if(res.data.code === -1) {
+                alert(res.data.msg)
+              }else if(res.data.code === 10101) {
+                location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+              }
+          })
         },
         waterfullInit() {
           waterfull.propInit(this)
         },
         dateInit() {
-          let dateObj = new Date()
-          let month = dateObj.getMonth() + 1
-          let year = dateObj.getFullYear()
-          let date = dateObj.getDate()
-          return `${year}-${month}-${date}`
+            let dateObj = new Date()
+            let monthStr = `${dateObj.getMonth() + 1}`
+            let year = dateObj.getFullYear()
+            if(monthStr.length === 1) {
+              monthStr = 0 + monthStr
+            }
+            let dateStr = `${dateObj.getDate()}`
+            if(dateStr.length === 1) {
+              datrStr = 0 + dateStr
+            }
+            this.changeDate({
+              index:3,
+              dateStr:`${year}-${monthStr}-${dateStr}`
+            })
+            return `${year}-${monthStr}-${dateStr}`
+        },
+        datePickerBtn() {
+          
+          this.getHistory(this.firstDate,this.lastDate)
         }
+    },
+    watch: {
+      historyList() {
+        console.log('hello')
+      }
     },
     components: {
       datePickerFirst,

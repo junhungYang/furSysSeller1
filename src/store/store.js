@@ -16,10 +16,21 @@ export const store = new Vuex.Store({
   },
   mutations: {
     changeDate(state, payload) {
+      if(payload.index === 3) {
+        state.firstDate = payload.dateStr
+        state.lastDate = payload.dateStr
+        return
+      }
       let dateObj = payload.date;
-      let month = dateObj.getMonth() + 1;
+      let month = `${dateObj.getMonth() + 1}`;
       let year = dateObj.getFullYear();
-      let date = dateObj.getDate();
+      let date = `${dateObj.getDate()}`;
+      if (month.length === 1) {
+        month = 0 + month
+      }
+      if (date.length === 1) {
+        date = 0 + date
+      }
       let dateStr = `${year}-${month}-${date}`
       if (payload.index === 0) {
          state.firstDate = dateStr

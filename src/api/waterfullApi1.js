@@ -26,35 +26,54 @@ const waterfullApi = {
         setTimeout(() => {
             let start = mod.$store.state.firstDate;
             let end = mod.$store.state.lastDate;
-            axios
-                .post(`${url}order/queryOrderListByEmployee`, {
-                pageNumber: this.waterfullIndex,
-                pageSize: 15,
-                start,
-                end
-                }, {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                })
-              .then(res => {
+            let str = `pageNumber=1&pageSize=10&start=${start}&end=${end}`;
+            axios.get(`${url}order/queryOrderListByEmployee?${str}`).then(res => {
                 if (res.data.code === 0) {
                     mod.historyList = mod.historyList.concat(res.data.data.list);
                     this.scrollRefresh(mod, scrollList);
                     mod.loadingState = "loading...";
                     mod.loadingFlag = false;
                     mod.scrollBottomFlag = true;
-                }else if(res.data.code === -1) {
+                } else if (res.data.code === -1) {
                     mod.loadingState = "没有数据了...";
                     setTimeout(() => {
                         mod.loadingFlag = false;
                         mod.scrollBottomFlag = true
                     }, 1500);
                     alert(res.data.msg)
-                }else if(res.data.code === 10101) {
+                } else if (res.data.code === 10101) {
                     location.assign("http://qinqing.ydcycloud.com/employee/index.html");
                 }
-              })
+            })
+            // axios
+            //     .post(`${url}order/queryOrderListByEmployee`, {
+            //     pageNumber: this.waterfullIndex,
+            //     pageSize: 15,
+            //     start,
+            //     end
+            //     }, {
+            //         headers: {
+            //             'Content-Type': 'application/x-www-form-urlencoded'
+            //         }
+            //     })
+            //   .then(res => {
+            //     if (res.data.code === 0) {
+            //         mod.historyList = mod.historyList.concat(res.data.data.list);
+            //         this.scrollRefresh(mod, scrollList);
+            //         mod.loadingState = "loading...";
+            //         mod.loadingFlag = false;
+            //         mod.scrollBottomFlag = true;
+            //     }else if(res.data.code === -1) {
+            //         mod.loadingState = "没有数据了...";
+            //         setTimeout(() => {
+            //             mod.loadingFlag = false;
+            //             mod.scrollBottomFlag = true
+            //         }, 1500);
+            //         alert(res.data.msg)
+            //     }else if(res.data.code === 10101) {
+            //         location.assign("http://qinqing.ydcycloud.com/employee/index.html");
+            //     }
+            //   })
         }, 1500);
     },
     scrollRefresh(mod, scrollList) {

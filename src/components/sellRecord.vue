@@ -72,18 +72,27 @@ export default {
         },
         getHistory(start,end) {
           this.waterfullInit()
-          axios.post(`${domain.testUrl}order/queryOrderListByEmployee`,{
-            pageNumber:1,
-            pageSize:10,
-            start,
-            end
-          },{
-            headers:{
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          }).then((res) => {
-            console.log(res)
-              if(res.data.code === 0) {
+          // axios.post(`${domain.testUrl}order/queryOrderListByEmployee`,{
+          //   pageNumber:1,
+          //   pageSize:10,
+          //   start,
+          //   end
+          // },{
+          //   headers:{
+          //     'Content-Type': 'application/x-www-form-urlencoded'
+          //   }
+          // }).then((res) => {
+          //     if(res.data.code === 0) {
+          //       this.historyList = res.data.data.list
+          //     }else if(res.data.code === -1) {
+          //       alert(res.data.msg)
+          //     }else if(res.data.code === 10101) {
+          //       // location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+          //     }
+          // })
+          let str = `pageNumber=1&pageSize=10&start=${start}&end=${end}`
+          axios.get(`${domain.testUrl}order/queryOrderListByEmployee?${str}`).then(res => {
+            if(res.data.code === 0) {
                 this.historyList = res.data.data.list
               }else if(res.data.code === -1) {
                 alert(res.data.msg)
@@ -113,7 +122,6 @@ export default {
             return `${year}-${monthStr}-${dateStr}`
         },
         datePickerBtn() {
-          
           this.getHistory(this.firstDate,this.lastDate)
         }
     },

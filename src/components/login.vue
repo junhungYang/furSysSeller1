@@ -5,7 +5,7 @@
         </header>
         <div class="login-main">
             <div class="login-box">
-                <div class="login-title">核销端</div>
+                <div class="login-title"><img src="/static/img/title.png" alt=""></div>
                 <div class="login-control">
                     <div class="user-id">
                         <span class="icon">
@@ -105,6 +105,10 @@ export default {
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
         background: #fff;
+        img {
+            margin-top: 8px;
+            height: 20px;
+        }
       }
       .login-control {
         background: #fff;

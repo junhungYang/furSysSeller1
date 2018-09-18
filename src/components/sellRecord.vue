@@ -7,7 +7,6 @@
             <span>至</span>
             <div><datePickerLast></datePickerLast></div>
             <div class="button" @click="firstDate && lastDate && datePickerBtn()">确定</div>
-            getHistory(firstDate,lastDate)
         </div>
         <div class="scroll-wrap" ref="scrollWrap">
             <ul>

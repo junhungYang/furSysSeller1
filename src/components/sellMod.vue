@@ -1,7 +1,7 @@
 <template>
     <div class="sellMod">
       <div class="main">
-        <header class="shop-name">{{myShop}}</header>
+        <header class="shop-name">{{dealername}}</header>
         <div class="content">
           <div class="data-wrap">
               <div class="title">会员资料</div>
@@ -63,7 +63,7 @@ import wechat from '../api/wechat'
 export default {
   data() {
     return {
-      myShop: 'null',
+      dealername:'',
       selectShowState:false,
       sellingGood:'',
       memberCode:''
@@ -112,7 +112,8 @@ export default {
     getEmployeeInfo() {
       axios.get(`${domain.testUrl}user/getEmployeeInfo`).then(res => {
         if(res.data.code === 0) {
-          //没有code
+          console.log(res.data.data)
+          this.dealername = res.data.data.dealername
         }else if(res.data.code === -1) {
           alert(res.data.msg)
         }else if(res.data.code === 10101) {
@@ -212,6 +213,8 @@ export default {
       text-align: center;
       line-height: 37px;
       font-size: 13px;
+      color:#353535;
+      font-weight: 600;
     }
     .content {
       flex: 1;

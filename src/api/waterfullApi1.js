@@ -26,7 +26,7 @@ const waterfullApi = {
         setTimeout(() => {
             let start = mod.$store.state.firstDate;
             let end = mod.$store.state.lastDate;
-            let str = `pageNumber=1&pageSize=10&start=${start}&end=${end}`;
+            let str = `pageNumber=${this.waterfullIndex}&pageSize=10`;
             axios.get(`${url}order/queryOrderListByEmployee?${str}`).then(res => {
                 if (res.data.code === 0) {
                     mod.historyList = mod.historyList.concat(res.data.data.list);

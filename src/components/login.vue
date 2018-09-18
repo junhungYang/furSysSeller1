@@ -76,7 +76,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: url("/static/img/背景@2x.jpg");
+  background: url("/static/img/background.jpg");
   background-size: cover;
   .header {
     margin-top: 72px;

@@ -162,20 +162,6 @@ export default {
       display: inline-block;
       width: 83px;
     }
-    @media screen and (max-width: 330px) {
-      input {
-        margin: 0;
-        width: 65px;
-      }
-      & {
-        padding: 0 13px;
-      }
-    }
-    @media screen and (min-width: 410px) {
-      input {
-        width: 100px !important;
-      }
-    }
     .button {
       position: absolute;
       right: 13px;
@@ -189,6 +175,23 @@ export default {
       text-align: center;
       color: #fff;
       background: linear-gradient(to bottom, #ecb678, #c59a68);
+    }
+    @media screen and (max-width: 330px) {
+      input {
+        margin: 0;
+        width: 60px;
+      }
+      & {
+        padding: 0 4px;
+      }
+      .button {
+        right: 4px;
+      }
+    }
+    @media screen and (min-width: 410px) {
+      input {
+        width: 100px !important;
+      }
     }
   }
   .scroll-wrap {

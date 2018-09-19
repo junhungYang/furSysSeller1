@@ -97,14 +97,15 @@ export default {
             str = `pageNumber=${this.pageIndex}&pageSize=10`
           }
           // ${domain.testUrl}order/queryOrderListByEmployee?${str}
+          // /api/user/getUserInfoByMemberCode
           this.loadingFlag = true
-          axios.get(`/api/user/getUserInfoByMemberCode`).then(res => {
+          axios.get(`${domain.testUrl}order/queryOrderListByEmployee?${str}`).then(res => {
             if(res.data.code === 0) {
                 this.historyList = res.data.data.list
               }else if(res.data.code === -1) {
                 alert(res.data.msg)
               }else if(res.data.code === 10101) {
-                // location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+                location.assign('http://qinqing.ydcycloud.com/employee/index.html')
               }
           })
           setTimeout(() => {

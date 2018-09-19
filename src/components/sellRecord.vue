@@ -244,6 +244,11 @@ export default {
             margin-top: 13px;
           }
         }
+        @media screen and (max-width: 330px){
+          .buy-data {
+            width: 120px;
+          }
+        }
       }
       .loading {
         height: 40px;

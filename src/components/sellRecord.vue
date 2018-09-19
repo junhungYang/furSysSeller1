@@ -28,8 +28,8 @@
                         </div>
                     </div>
                 </li>
-                <div class="loading" v-show="loadingFlag">{{loadingState}}</div>
             </ul>
+            <v-loadingAnimate v-show="loadingFlag"></v-loadingAnimate>
         </div>
         <div class="scanCode">
             <img src="/static/img/组3@2x.png" alt="">
@@ -39,16 +39,18 @@
 <script>
 import BScroll from 'better-scroll'
 import axios from 'axios'
-import waterfull from '../api/waterfullApi1'
 import datePickerFirst from './datePickerFirst'
 import datePickerLast from './datePickerLast'
 import {mapState,mapMutations} from 'vuex'
+import loadingAnimate from '../plugin/loadingAnimate'
 export default {
     data() {
       return {
         historyList:[],
         dateStr:'',
-        loadingFlag:false,
+        loadingFlag:true,
+        pageIndex:1,
+        fromBtn:false
       }
     },
     computed: {
@@ -58,63 +60,84 @@ export default {
         this.scrollInit()
     },
     created() {
-        this.dateStr = this.dateInit()
-        this.getHistory(this.dateStr,this.dateStr)
+        this.getHistory()
     },
     methods: {
         ...mapMutations(['changeDate']),
         scrollInit() {
             this.scrollList = new BScroll(this.$refs.scrollWrap,{
                 click:true,
-                probeType:3
+                probeType:3,
+                pullDownRefresh: {
+                  threshold: 20,
+                  stop: 0
+                },
+                pullUpLoad:true
             })
-            waterfull.scrollGetData(this, 'scrollWrap', 'scrollList', domain.testUrl)
+            this.scrollEventInit()
         },
-        getHistory(start,end,fromBtn) {
-          this.waterfullInit()
+        scrollEventInit() {
+            this.scrollList.on('pullingDown',() => {
+                this.pageIndex--
+                this.pageIndex > 0 ? this.getHistory() :　'';
+                this.scrollList.finishPullDown()
+            })
+            this.scrollList.on('pullingUp',pos => {
+                this.pageIndex ++
+                this.getHistory()
+                this.scrollList.finishPullUp()
+            })
+        },
+        getHistory() {
           let str
-          if(!fromBtn) {
-             str = `pageNumber=1&pageSize=10`
-          }else {
-            str = `pageNumber=1&pageSize=10&start=${start}&end=${end}`
+          if(this.firstDate && this.lastDate && this.fromBtn) {
+            //规定了必须有日期区间而且通过按钮确定后才会进入到请求具体日子的请求中
+            str = `pageNumber=${this.pageIndex}&pageSize=10&start=${this.firstDate}&end=${this.lastDate}`
+          } else {
+            str = `pageNumber=${this.pageIndex}&pageSize=10`
           }
-          axios.get(`${domain.testUrl}order/queryOrderListByEmployee?${str}`).then(res => {
+          // ${domain.testUrl}order/queryOrderListByEmployee?${str}
+          this.loadingFlag = true
+          axios.get(`/api/user/getUserInfoByMemberCode`).then(res => {
             if(res.data.code === 0) {
                 this.historyList = res.data.data.list
               }else if(res.data.code === -1) {
                 alert(res.data.msg)
               }else if(res.data.code === 10101) {
-                location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+                // location.assign('http://qinqing.ydcycloud.com/employee/index.html')
               }
           })
+          setTimeout(() => {
+            this.loadingFlag = false
+          }, 1500);
         },
-        waterfullInit() {
-          waterfull.propInit(this)
-        },
-        dateInit() {
-            let dateObj = new Date()
-            let monthStr = `${dateObj.getMonth() + 1}`
-            let year = dateObj.getFullYear()
-            if(monthStr.length === 1) {
-              monthStr = 0 + monthStr
-            }
-            let dateStr = `${dateObj.getDate()}`
-            if(dateStr.length === 1) {
-              datrStr = 0 + dateStr
-            }
-            this.changeDate({
-              index:3,
-              dateStr:`${year}-${monthStr}-${dateStr}`
-            })
-            return `${year}-${monthStr}-${dateStr}`
-        },
+        // dateInit() {
+          //     let dateObj = new Date()
+          //     let monthStr = `${dateObj.getMonth() + 1}`
+          //     let year = dateObj.getFullYear()
+          //     if(monthStr.length === 1) {
+          //       monthStr = 0 + monthStr
+          //     }
+          //     let dateStr = `${dateObj.getDate()}`
+          //     if(dateStr.length === 1) {
+          //       datrStr = 0 + dateStr
+          //     }
+          //     this.changeDate({
+          //       index:3,
+          //       dateStr:`${year}-${monthStr}-${dateStr}`
+          //     })
+          //     return `${year}-${monthStr}-${dateStr}`
+          // },
         datePickerBtn() {
-          this.getHistory(this.firstDate,this.lastDate,'fromBtn')
+          this.pageIndex = 1;  //假如用户选择了日期，那么初始化页数，从新从第一页开始请求
+          this.fromBtn = true
+          this.getHistory()
         }
     },
     components: {
       datePickerFirst,
-      datePickerLast
+      datePickerLast,
+      'v-loadingAnimate':loadingAnimate
     }
 }
 </script>
@@ -171,6 +194,7 @@ export default {
   .scroll-wrap {
     flex: 1;
     overflow: hidden;
+    position: relative;
     ul {
       li {
         padding: 18px 13px 18px 13px;

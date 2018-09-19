@@ -80,10 +80,16 @@ export default {
   background-size: cover;
   .header {
     margin-top: 72px;
+    width: 100%;
     img {
       display: block;
       margin: 0 auto;
       width: 340px;
+    }
+    @media screen and (max-width:350px){
+        img {
+            width: 300px;
+        }
     }
   }
   .login-main {

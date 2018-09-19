@@ -105,7 +105,7 @@ export default {
               }else if(res.data.code === -1) {
                 alert(res.data.msg)
               }else if(res.data.code === 10101) {
-                location.assign('http://qinqing.ydcycloud.com/employee/index.html')
+                // location.assign('http://qinqing.ydcycloud.com/employee/index.html')
               }
           })
           setTimeout(() => {
